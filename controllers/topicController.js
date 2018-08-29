@@ -1,4 +1,5 @@
 const Topic = require('../models/Topic');
+const Article = require('../models/Article');
 
 const getAllTopics = (req, res, next) => {
     Topic.find()
@@ -8,11 +9,14 @@ const getAllTopics = (req, res, next) => {
     .catch(console.log);
 }
 
-const getTopicBySlug = (req, res, next) => {
-    Topic.find({slug: topic_slug})
-    .then((topic) => {
-        res.status(200).send({topic})
+const getArticlesByTopic = (req, res, next) => {
+    const {topic_slug} = req.params
+
+    console.log(topic_slug)
+    Article.find({belongs_to: topic_slug})
+    .then((articles) => {
+        res.status(200).send({articles})
     })
 }
 
-module.exports = {getAllTopics, getTopicBySlug}
+module.exports = {getAllTopics, getArticlesByTopic}
