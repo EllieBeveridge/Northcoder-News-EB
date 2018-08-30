@@ -59,6 +59,7 @@ describe('/api', () => {
     })
     describe('/articles', () => {
         it('GET returns 200 and array of all articles', () => {
+            const article_id = articles[0]._id
             return request.get('/api/articles')
             .expect(200)
             .then(({body}) => {
@@ -79,10 +80,66 @@ describe('/api', () => {
             return request.get(`/api/articles/${article_id}/comments`)
             .expect(200)
             .then(({body}) => {
-                console.log(body.comments);
                 expect(body.comments[0]).to.contain.keys('votes', '_id', 'body', 'created_at', 'belongs_to', 'created_by', '__v');
                 expect(body.comments).to.be.an('array');
             })
         })
+        it('PATCH sends a 201 and updates the vote count if voting up', () => {
+            const article_id = articles[0]._id
+            return request.patch(`/api/articles/${article_id}?vote=up`)
+            .expect(201)
+            .then(({body}) => {
+                expect(body.article.votes).to.equal(1)
+            })
+        })
+            it('PATCH sends a 201 and updates the vote count if voting down', () => {
+                const article_id = articles[0]._id
+                return request.patch(`/api/articles/${article_id}?vote=down`)
+                .expect(201)
+                .then(({body}) => {
+                    expect(body.article.votes).to.equal(-1)
+                })
+        
+        })
+        describe('/api/comments', () => {
+            it('PATCH sends a 201 and updates the vote count if voting down', () => {
+                const comment_id = comments[0]._id
+                return request.patch(`/api/comments/${comment_id}?vote=up`)
+                .expect(201)
+                .then(({body}) => {
+                    expect(body.comment.votes).to.equal(8)
+                })
+        
+        })
+        it('PATCH sends a 201 and updates the vote count if voting down', () => {
+            const comment_id = comments[0]._id
+            return request.patch(`/api/comments/${comment_id}?vote=down`)
+            .expect(201)
+            .then(({body}) => {
+                expect(body.comment.votes).to.equal(6)
+            })
+    
     })
+    it('DELETE sends a 200 and removes a comment by ID', () => {
+        const comment_id = comments[0]._id
+        return request.delete(`/api/comments/${comment_id}`)
+        .expect(200)
+        .then(({body}) => {
+            expect(body.comment.ok).to.equal(1);
+            expect(comments.length).to.equal(8);
+        })
+      })
+    })
+    describe.only('/api/users', () => {
+        it('GET returns user object when username input', () => {
+            const usernameInput = users[0].username
+            return request.get(`/api/users/${usernameInput}`)
+            .expect(200)
+            .then(({body}) => {
+                expect(body.user.username).to.equal(usernameInput);
+                expect(body.user).to.contain.keys('name', 'username', 'avatar_url');
+            })
+        })
+    })
+  })
 })

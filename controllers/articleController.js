@@ -12,10 +12,22 @@ const getAllArticles = (req, res, next) => {
 const getArticleByID = (req, res, next) => {
     const {article_id} = req.params
 
-    Article.find({_id: article_id})
+    Comment.find({belongs_to: article_id})
+    .then((comments) => {
+        const commentCount = comments.length
+        return commentCount
+    })
+    .then((commentCount) => {
+        //do a Promise.all with commentCount and Article.find
+        //console.log(commentCount);
+        Article.find({_id: article_id}, {$set: {comment_count: 0}})
+    
+  .populate('comment_count', commentCount )
+})
     .then((article) => {
         res.status(200).send({article})
     })
+    .catch(console.log);
 }
 
 const getCommentsByArticle = (req, res, next) => {
@@ -25,21 +37,29 @@ const getCommentsByArticle = (req, res, next) => {
     .then((comments) => {
         res.status(200).send({comments})
     })
+    .catch(console.log);
 }
 
 const patchVoteCount = (req, res, next) => {
-    const {article_id} = req.params
-    console.log(req.query);
-    console.log(req.body.votes);
+    const {article_id} = req.params;
+let x = 0;
+    if (req.query.vote === 'up') x=1;
+    else if (req.query.vote === 'down') x= -1;
 
-    if (req.query === 'up')
-
-    Comment.update({belongs_to: article_id}, {$set: {req.body.votes: req.body.votes + 1 }})
-    .then((comment) => {
-        res.status(201).send({comment})
-    })
-
-
+        Article.findByIdAndUpdate({_id: article_id}, {$inc: {votes: x}}, {new: true})
+        .then((article) => {
+            res.status(201).send({article})
+        })
+ 
+    .catch(console.log);
 }
+
+const addCommentCount = (req, res, next) => {
+    Article.update({},
+        { $set: {"comment_count": x}},
+        false,
+        true)
+}
+
 
 module.exports = { getAllArticles, getArticleByID, getCommentsByArticle, patchVoteCount }

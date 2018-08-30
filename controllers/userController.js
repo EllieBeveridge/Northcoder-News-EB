@@ -9,4 +9,12 @@ const getAllUsers = (req, res, next) => {
     .catch(console.log);
 }
 
-module.exports = {getAllUsers}
+const getUsername = (req, res, next) => {
+    User.findOne({username: req.params.username})
+    .then(user => {
+        res.status(200).send({user});
+    })
+    .catch(console.log);
+}
+
+module.exports = {getAllUsers, getUsername}
