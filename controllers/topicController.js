@@ -12,11 +12,18 @@ const getAllTopics = (req, res, next) => {
 const getArticlesByTopic = (req, res, next) => {
     const {topic_slug} = req.params
 
-    console.log(topic_slug)
     Article.find({belongs_to: topic_slug})
     .then((articles) => {
         res.status(200).send({articles})
     })
 }
 
-module.exports = {getAllTopics, getArticlesByTopic}
+const addArticle = (req, res, next) => {
+    const newArticle = new Article(req.body);
+    newArticle.save()
+    .then((article) => {
+        res.status(201).send({article})
+    })
+}
+
+module.exports = {getAllTopics, getArticlesByTopic, addArticle}

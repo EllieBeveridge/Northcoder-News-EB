@@ -26,7 +26,7 @@ const createUsers = (userData) => {
 
         userDocs.forEach((newID, i) => createdByPairs[userData[i].username] = newID._id)
 
-        return articleData.map(article =>{
+        return articleData.map(article => {
          return {
             title: article.title,
             body: article.body,
