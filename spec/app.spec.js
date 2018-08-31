@@ -46,8 +46,8 @@ describe('/api', () => {
                     "title": "TEST ME",
                     "body": "It's nearly lunch",
                     "created_at": "2017-07-21T17:54:10.346Z",
-                    "belongs_to": "hellotest",
-                    "created_by": "5b87c929e356272181ef1c5a"
+                    "belongs_to": "cats",
+                    "created_by": "butter_bridge"
                 }
             )
             .expect(201)
@@ -97,7 +97,7 @@ describe('/api', () => {
                 return request.patch(`/api/articles/${article_id}?vote=down`)
                 .expect(201)
                 .then(({body}) => {
-                    expect(body.article.votes).to.equal(-1)
+                    expect(body.article.votes).to.equal(-1) // don't hard code responses, use articles etc
                 })
         
         })
@@ -130,7 +130,7 @@ describe('/api', () => {
         })
       })
     })
-    describe.only('/api/users', () => {
+    describe('/api/users', () => {
         it('GET returns user object when username input', () => {
             const usernameInput = users[0].username
             return request.get(`/api/users/${usernameInput}`)
