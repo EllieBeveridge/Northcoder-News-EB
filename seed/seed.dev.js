@@ -1,7 +1,7 @@
 const seedDB = require('./seed');
 const mongoose = require('mongoose');
 
-const testData = require('./testData/');
+const testData = require('./devData/');
 
 const {DB_URL} = require('../config');
 
