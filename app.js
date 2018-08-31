@@ -2,9 +2,10 @@ const express = require('express');
 const app = express();
 const apiRouter = require('./routers/apiRouter');
 const bodyParser = require('body-parser');
-//const {DB_URL} = require('./config') || process.env;
-const DB_URL = 'mongodb://localhost:27017/northcoder_news';
+const {DB_URL = require('./config').DB_URL} = process.env;
 const mongoose = require('mongoose');
+
+console.log(DB_URL);
 
 mongoose.connect(DB_URL, { useNewUrlParser: true })
   .then(() => {
