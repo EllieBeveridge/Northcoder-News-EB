@@ -1,5 +1,6 @@
 const Topic = require('../models/Topic');
 const Article = require('../models/Article');
+const User = require('../models/User');
 
 const getAllTopics = (req, res, next) => {
     Topic.find()
@@ -19,9 +20,17 @@ const getArticlesByTopic = (req, res, next) => {
 }
 
 const addArticle = (req, res, next) => {
-    const newArticle = new Article(req.body);
-    newArticle.save()
-    .then((article) => {
+        User.findOne({username: req.body.created_by}).lean()
+    .then((userDoc) => {
+        const newArticle = req.body
+        newArticle.created_at = Date.now();
+        //newArticle.votes = 0;
+        newArticle.created_by = userDoc._id;
+        newArticle.belongs_to = req.params.topic_slug
+        const newNewArticle = new Article(newArticle);
+        return Promise.all([newNewArticle.save(), userDoc])
+    })
+    .then(([article, userDoc]) => {
         res.status(201).send({article})
     })
 }

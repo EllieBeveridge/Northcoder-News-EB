@@ -3,7 +3,6 @@ const topicsRouter = require('./topicsRouter');
 const userRouter = require('./userRouter');
 const articleRouter = require('./articleRouter');
 const commentRouter = require('./commentRouter');
-const {getApis} = require('../controllers/apiController');
 
 apiRouter.route('/').get((req, res, next) => {
     res.render('apiTemplate');

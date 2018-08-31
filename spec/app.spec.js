@@ -42,13 +42,10 @@ describe('/api', () => {
             return request.post('/api/topics/cats/articles')
             .send(
                 {
-                    "votes": 80,
                     "title": "TEST ME",
-                    "body": "It's nearly lunch",
-                    "created_at": "2017-07-21T17:54:10.346Z",
-                    "belongs_to": "cats",
-                    "created_by": "butter_bridge"
-                }
+                    "created_by": "butter_bridge",
+                    "body": "This is a lovely test"
+                  }
             )
             .expect(201)
             .then(({body}) => {
@@ -63,7 +60,7 @@ describe('/api', () => {
             return request.get('/api/articles')
             .expect(200)
             .then(({body}) => {
-                expect(body.articles[0]).to.contain.keys('votes', '_id', 'title', 'body', 'created_at', 'belongs_to', 'created_by', '__v');
+                expect(body.articles[0]).to.contain.keys('votes', '_id', 'title', 'body', 'comment_count', 'created_at', 'belongs_to', 'created_by', '__v');
                 expect(body.articles).to.be.an('array');
             })
         })
@@ -72,7 +69,7 @@ describe('/api', () => {
             return request.get(`/api/articles/${article_id}`)
             .expect(200)
             .then(({body}) => {
-                expect(body.article[0]).to.contain.keys('votes', '_id', 'title', 'body', 'created_at', 'belongs_to', 'created_by', '__v');
+                expect(body.article[0]).to.contain.keys('votes', '_id', 'title', 'body', 'comment_count', 'created_at', 'belongs_to', 'created_by', '__v');
             })
         })
         it('GET returns a 200 and an array of comments for an article_id', () => {
@@ -89,7 +86,8 @@ describe('/api', () => {
             return request.patch(`/api/articles/${article_id}?vote=up`)
             .expect(201)
             .then(({body}) => {
-                expect(body.article.votes).to.equal(1)
+                expect(body.article.votes).to.equal(articles[0].votes +1);
+                expect(body.article._id).to.equal(`${article_id}`);
             })
         })
             it('PATCH sends a 201 and updates the vote count if voting down', () => {
@@ -97,7 +95,8 @@ describe('/api', () => {
                 return request.patch(`/api/articles/${article_id}?vote=down`)
                 .expect(201)
                 .then(({body}) => {
-                    expect(body.article.votes).to.equal(-1) // don't hard code responses, use articles etc
+                    expect(body.article.votes).to.equal(articles[0].votes -1);
+                    expect(body.article._id).to.equal(`${article_id}`); 
                 })
         
         })
@@ -107,7 +106,8 @@ describe('/api', () => {
                 return request.patch(`/api/comments/${comment_id}?vote=up`)
                 .expect(201)
                 .then(({body}) => {
-                    expect(body.comment.votes).to.equal(8)
+                    expect(body.comment.votes).to.equal(comments[0].votes +1);
+                    expect(body.comment._id).to.eql(`${comment_id}`);
                 })
         
         })
@@ -116,7 +116,8 @@ describe('/api', () => {
             return request.patch(`/api/comments/${comment_id}?vote=down`)
             .expect(201)
             .then(({body}) => {
-                expect(body.comment.votes).to.equal(6)
+                expect(body.comment.votes).to.equal(comments[0].votes-1);
+                expect(body.comment._id).to.eql(`${comment_id}`);
             })
     
     })
@@ -126,7 +127,6 @@ describe('/api', () => {
         .expect(200)
         .then(({body}) => {
             expect(body.comment.ok).to.equal(1);
-            expect(comments.length).to.equal(8);
         })
       })
     })
