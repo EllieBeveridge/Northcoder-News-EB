@@ -3,7 +3,7 @@ const Comment = require('../models/Comment')
 
 const getAllArticles = (req, res, next) => {
 
-    Comment.find().lean()
+    Comment.find()
     .then((comments) => {
     return Promise.all([Article.find().lean(), comments])
     })
@@ -19,7 +19,7 @@ const getAllArticles = (req, res, next) => {
         })
         res.status(200).send({articles});
     })
-    .catch(console.log);
+    .catch(err => next(err))
 }
 
 
@@ -38,7 +38,7 @@ const getArticleByID = (req, res, next) => {
             article[0].comment_count = commentCount;
             res.status(200).send({article})
         })
-    .catch(console.log);
+        .catch(err => next(err));
     }
 
 
@@ -49,7 +49,7 @@ const getCommentsByArticle = (req, res, next) => {
     .then((comments) => {
         res.status(200).send({comments})
     })
-    .catch(console.log);
+    .catch(err => next(err));
 }
 
 
@@ -72,8 +72,7 @@ const patchVoteCount = (req, res, next) => {
             res.status(201).send({article})
         })
     })
- 
-    .catch(console.log);
+    .catch(err => next(err));
 }
 
 

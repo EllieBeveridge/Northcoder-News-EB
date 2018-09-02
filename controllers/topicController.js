@@ -7,7 +7,7 @@ const getAllTopics = (req, res, next) => {
     .then((topics) => {
         res.status(200).send({topics});
     })
-    .catch(console.log);
+    .catch(err => next(err));
 }
 
 const getArticlesByTopic = (req, res, next) => {
@@ -17,6 +17,7 @@ const getArticlesByTopic = (req, res, next) => {
     .then((articles) => {
         res.status(200).send({articles})
     })
+    .catch(err => next(err));
 }
 
 const addArticle = (req, res, next) => {
@@ -33,6 +34,7 @@ const addArticle = (req, res, next) => {
     .then(([article, userDoc]) => {
         res.status(201).send({article})
     })
+    .catch(err => next(err));
 }
 
 module.exports = {getAllTopics, getArticlesByTopic, addArticle}

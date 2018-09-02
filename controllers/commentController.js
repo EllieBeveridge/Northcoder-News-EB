@@ -5,7 +5,7 @@ const getComments = (req, res, next) => {
     .then(comments => {
         res.status(200).send({comments})
     })
-    .catch(console.log);
+    .catch(err => next(err));
 }
 
 const patchComments = (req, res, next) => {
@@ -19,7 +19,7 @@ let x = 0;
             res.status(201).send({comment})
         })
  
-    .catch(console.log);
+    .catch(err => next(err));
 }
 
 const deleteComment = (req, res, next) => {
@@ -29,7 +29,7 @@ const deleteComment = (req, res, next) => {
     .then(comment => {
         res.status(200).send({comment})
     })
-    .catch(console.log);
+    .catch(err => next(err));
 }
 
 module.exports = {getComments, deleteComment, patchComments};

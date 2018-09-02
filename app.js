@@ -18,5 +18,9 @@ app.set('view engine', 'ejs');
 
 app.use('/api', apiRouter);
 
+app.use((err, req, res, next) => {
+    res.status(status).send({status: 500, msg: 'internal server error'}); 
+})
+
 
 module.exports = app;

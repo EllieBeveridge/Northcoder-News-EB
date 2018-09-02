@@ -6,7 +6,7 @@ const getAllUsers = (req, res, next) => {
     .then((users) => {
         res.status(200).send({users});
     })
-    .catch(console.log);
+    .catch(err => next(err));
 }
 
 const getUsername = (req, res, next) => {
@@ -14,7 +14,7 @@ const getUsername = (req, res, next) => {
     .then(user => {
         res.status(200).send({user});
     })
-    .catch(console.log);
+    .catch(err => next(err));
 }
 
 module.exports = {getAllUsers, getUsername}
