@@ -17,13 +17,11 @@ Now type the following into your command line:
 npm install
 ````
 
-To start running your Mongo database type:
+To start running your Mongo database type the following into your command line terminal:
 
 ````
 mongod
 ````
-
-into your command line.
 
 You will need to install a express before running this app in your browser.
 Write the following into your command line:
@@ -37,8 +35,6 @@ To seed the database, we need mongoose. Install by writing the following into yo
 ````
 npm install mongoose
 ````
-
-Ensure you have
 
 ## Getting Started
 
