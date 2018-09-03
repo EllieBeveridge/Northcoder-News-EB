@@ -1,8 +1,4 @@
 const mongoose = require('mongoose');
-//const articleData = require('./testData/articles.json');
-//const commentData = require('./testData/comments.json');
-//const userData = require('./testData/users.json');
-//const topicData = require('./testData/topics.json');
 const { createTopics, createUsers, createComments, createArticles } = require('./utils/generate-data');
 const {Article, Comment, Topic, User } = require('../models');
 

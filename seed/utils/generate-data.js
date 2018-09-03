@@ -1,7 +1,3 @@
-// const articleData = require('../testData/articles.json');
-// const commentData = require('../testData/comments.json');
-// const topicData = require('../testData/topics.json');
-// const userData = require('../testData/users.json');
 const { Article, Comment, Topic, User } = require('../../models');
 
 const createTopics = (topicData) => {

@@ -23,7 +23,7 @@ To start running your Mongo database type the following into your command line t
 mongod
 ````
 
-You will need to install a express before running this app in your browser.
+You will need to install express before running this app in your browser.
 Write the following into your command line:
 
 ````
@@ -36,6 +36,12 @@ To seed the database, we need mongoose. Install by writing the following into yo
 npm install mongoose
 ````
 
+To have a continuously listening server, install Nodemon:
+
+````
+npm install nodemon
+````
+
 ## Getting Started
 
 To seed the database, write the following into your command line:
@@ -45,6 +51,7 @@ npm run seed:production
 
 npm run dev
 `````
+To exit nodemon, use Ctrl + C
 
 The seeded data will now be available in localhost:9090. To test whether the development environment is running, input one of the GET endpoints.
 
@@ -69,6 +76,8 @@ npm - Package Manager for JavaScript
 Mongoose - Object Modelling for Node.js
 
 Express - Web Framework for Node.js
+
+Nodemon - Node.js Development Tool
 
 
 ## Authors

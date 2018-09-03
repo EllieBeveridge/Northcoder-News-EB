@@ -1,7 +1,7 @@
 const seedDB = require('./seed');
 const mongoose = require('mongoose');
 
-const testData = require('./devData/');
+const devData = require('./devData/');
 
 const {DB_URL} = require('../config');
 
@@ -12,7 +12,7 @@ const {DB_URL} = require('../config');
 
 mongoose.connect(DB_URL, { useNewUrlParser : true })
     .then(() => {
-        return seedDB(testData)
+        return seedDB(devData)
     })
     .then((data) => {
         console.log(data, '<<<<');
