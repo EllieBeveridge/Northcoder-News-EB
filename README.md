@@ -9,9 +9,11 @@ git clone https://github.com/EllieBeveridge/BE2-northcoders-news
 cd BE2-northcoders-news
 ````
 
-Install Node and MongoDB using this installation guide https://github.com/northcoders/setup-guides/blob/master/Linux/README.md
+Download and install Node by following the instructions found on their website here. https://nodejs.org/en/download/
 
-Now type the following into your command line:
+Download and install MongoDB using the instructions found on their website here.  https://docs.mongodb.com/manual/installation/https://github.com/northcoders/setup-guides/blob/master/Linux/README.md
+
+To make sure express, mongoose and nodemon are running, please type the following code into your command line terminal:
 
 ````
 npm install
@@ -21,25 +23,6 @@ To start running your Mongo database type the following into your command line t
 
 ````
 mongod
-````
-
-You will need to install express before running this app in your browser.
-Write the following into your command line:
-
-````
-npm install express
-````
-
-To seed the database, we need mongoose. Install by writing the following into your command line:
-
-````
-npm install mongoose
-````
-
-To have a continuously listening server, install Nodemon:
-
-````
-npm install nodemon
 ````
 
 ## Getting Started
