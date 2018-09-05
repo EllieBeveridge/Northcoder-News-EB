@@ -8,7 +8,7 @@ const getAllArticles = (req, res, next) => {
 			return Promise.all([Article.find().lean(), comments])
 		})
 		.then(([articles, comments]) => {
-
+			if (!articles) return Promise.reject(next)
 			articles.forEach(article => {
 				article.comment_count = 0
 				comments.forEach(comment => {
@@ -19,13 +19,16 @@ const getAllArticles = (req, res, next) => {
 			})
 			res.status(200).send({ articles });
 		})
-		.catch(err => next(err))
+		.catch(err => {
+			if (err.name === 'CastError') next({ status: 404, msg: "Error 404: Not found." });
+			else next(err)
+		})
 }
 
 
 const getArticleByID = (req, res, next) => {
 	const { article_id } = req.params
-
+	if (article_id.length !== 24) return next({ status: 400, msg: "Error 400: Bad request." })
 	Comment.find({ belongs_to: article_id })
 		.then((comments) => {
 			const commentCount = comments.length
@@ -35,27 +38,34 @@ const getArticleByID = (req, res, next) => {
 			return Promise.all([Article.find({ _id: article_id }).lean(), commentCount])
 		})
 		.then(([article, commentCount]) => {
+			if (!article) return Promise.reject(next);
 			article[0].comment_count = commentCount;
 			res.status(200).send({ article })
 		})
-		.catch(err => next(err));
+		.catch(err => {
+			if (err.name === 'CastError') next({ status: 404, msg: "Error 404: Not found." });
+			else next(err)
+		});
 }
 
 
 const getCommentsByArticle = (req, res, next) => {
 	const { article_id } = req.params
-
+	if (article_id.length !== 24) return next({ status: 400, msg: "Error 400: Bad request." })
 	Comment.find({ belongs_to: article_id })
 		.then((comments) => {
 			res.status(200).send({ comments })
 		})
-		.catch(err => next(err));
+		.catch(err => {
+			if (err.name === 'CastError') next({ status: 404, msg: "Error 404: Not found." });
+			else next(err)
+		})
 }
 
 
 const patchVoteCount = (req, res, next) => {
 	const { article_id } = req.params;
-
+	if (article_id.length !== 24) return next({ status: 400, msg: "Error 400: Bad request." })
 	Comment.find({ belongs_to: article_id })
 		.then((comments) => {
 			const commentCount = comments.length
@@ -72,7 +82,10 @@ const patchVoteCount = (req, res, next) => {
 					res.status(201).send({ article })
 				})
 		})
-		.catch(err => next(err));
+		.catch(err => {
+			if (err.name === 'CastError') next({ status: 404, msg: "Error 404: Not found." });
+			else next(err)
+		})
 }
 
 

@@ -4,7 +4,7 @@
   "description": "Northcoders News API Sprint",
   "main": "index.js",
   "scripts": {
-    "test": "NODE_ENV=test mocha spec/ --timeout 3000",
+    "test": "NODE_ENV=test mocha spec/ --timeout 4000",
     "start": "node listen.js",
     "dev": "nodemon listen.js",
     "seed:dev": "node ./seed/seed.dev.js",
