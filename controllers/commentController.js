@@ -3,11 +3,11 @@ const Comment = require('../models/Comment')
 const getComments = (req, res, next) => {
 	Comment.find()
 		.then(comments => {
-			if (!comments) Promise.reject(next)
+			if (!comments) throw { name: "CastError" }
 			res.status(200).send({ comments })
 		})
 		.catch(err => {
-			if (err.name === 'CastError') next({ status: 404, msg: "Error 404: Not found." });
+			if (err.name === 'CastError') next({ status: 404, msg: "Error 404: Comments not found." });
 			else next(err)
 		})
 }
@@ -21,12 +21,11 @@ const patchComments = (req, res, next) => {
 
 	Comment.findByIdAndUpdate({ _id: comment_id }, { $inc: { votes: vote } }, { new: true })
 		.then((comment) => {
-			if (!comment) Promise.reject(next)
+			if (!comment) throw { name: "CastError" }
 			res.status(201).send({ comment })
 		})
-
 		.catch(err => {
-			if (err.name === 'CastError') next({ status: 404, msg: "Error 404: Not found." });
+			if (err.name === 'CastError') next({ status: 404, msg: "Error 404: Comment not found." });
 			else next(err)
 		})
 }
@@ -37,11 +36,11 @@ const deleteComment = (req, res, next) => {
 		{ _id: req.params.comment_id }
 	)
 		.then(comment => {
-			if (!comment) Promise.reject(next)
+			if (!comment) throw { name: "CastError" }
 			res.status(200).send({ comment })
 		})
 		.catch(err => {
-			if (err.name === 'CastError') next({ status: 404, msg: "Error 404: Not found." });
+			if (err.name === 'CastError') next({ status: 404, msg: "Error 404: Comment not found." });
 			else next(err)
 		})
 }

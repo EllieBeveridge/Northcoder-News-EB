@@ -52,6 +52,37 @@ describe('/api', () => {
                     expect(body.article).to.contain.keys('votes', '_id', 'title', 'body', 'created_at', 'belongs_to', 'created_by', '__v');
                 })
         })
+        it('GET /topics/:topic_id/articles error handles for 404 not found', () => {
+            const noTopic = 'wenches'
+            return request.get(`/api/topics/${noTopic}/articles`)
+                .expect(404)
+                .then(({ body }) => {
+                    expect(typeof body).to.equal('object');
+                    expect(body.msg).to.equal("Error 404: Article not found.");
+                })
+        })
+        it('GET /topics/:topic_id/articles error handles for 404 not found', () => {
+            const badTopic = 'w2en5ch4es'
+            return request.get(`/api/topics/${badTopic}/articles`)
+                .expect(400)
+                .then(({ body }) => {
+                    expect(typeof body).to.equal('object');
+                    expect(body.msg).to.equal("Error 400: Bad topic request");
+                })
+        })
+        it('POST /topics/:topic_id/articles error handles for 400 bad key request', () => {
+            return request.post(`/api/topics/cats/articles`)
+                .send({
+                    "tootle": "TEST ME",
+                    "scroted_by": "butter_bridge",
+                    "bady": "This is a lovely test"
+                })
+                .expect(400)
+                .then(({ body }) => {
+                    expect(typeof body).to.equal('object');
+                    expect(body.msg).to.equal("Error 400: Bad key request.");
+                })
+        })
     })
     describe('/articles', () => {
         it('GET returns 200 and array of all articles', () => {
@@ -102,6 +133,42 @@ describe('/api', () => {
                 })
 
         })
+        it('PATCH error handles for 400 bad request', () => {
+            const badArticle = 'abc123'
+            return request.patch(`/api/articles/${badArticle}?vote=down`)
+                .expect(400)
+                .then(({ body }) => {
+                    expect(typeof body).to.equal('object');
+                    expect(body.msg).to.equal("Error 400: Bad ID Request.");
+                })
+        })
+        it('PATCH error handles for 404 not found', () => {
+            const noArticle = '5b896113787404464027lid3'
+            return request.patch(`/api/articles/${noArticle}?vote=down`)
+                .expect(404)
+                .then(({ body }) => {
+                    expect(typeof body).to.equal('object');
+                    expect(body.msg).to.equal("Error 404: Article not found.");
+                })
+        })
+        it('GET /articles/:article_id error handles for 404 not found', () => {
+            const noArticle = '5b896114787404464027iac3'
+            return request.get(`/api/articles/${noArticle}`)
+                .expect(404)
+                .then(({ body }) => {
+                    expect(typeof body).to.equal('object');
+                    expect(body.msg).to.equal("Error 404: Article not found.");
+                })
+        })
+        it('GET /articles/:article_id error handles for 400 bad request', () => {
+            const badArticle = 'abc123';
+            return request.get(`/api/articles/${badArticle}`)
+                .expect(400)
+                .then(({ body }) => {
+                    expect(typeof body).to.equal('object');
+                    expect(body.msg).to.equal("Error 400: Bad ID Request.");
+                })
+        })
     })
     describe('/comments', () => {
         it('PATCH sends a 201 and updates the vote count if voting down', () => {
@@ -124,12 +191,39 @@ describe('/api', () => {
                 })
 
         })
+        it('PATCH error handles for 400 bad request', () => {
+            const badComment = 'abc123'
+            return request.patch(`/api/comments/${badComment}?vote=down`)
+                .expect(400)
+                .then(({ body }) => {
+                    expect(typeof body).to.equal('object');
+                    expect(body.msg).to.equal("Error 400: Bad request.");
+                })
+        })
+        it('PATCH error handles for 404 not found', () => {
+            const noComment = '5b896113787404464027bed3'
+            return request.patch(`/api/comments/${noComment}?vote=down`)
+                .expect(404)
+                .then(({ body }) => {
+                    expect(typeof body).to.equal('object');
+                    expect(body.msg).to.equal("Error 404: Comment not found.");
+                })
+        })
         it('DELETE sends a 200 and removes a comment by ID', () => {
             const comment_id = comments[0]._id
             return request.delete(`/api/comments/${comment_id}`)
                 .expect(200)
                 .then(({ body }) => {
                     expect(body.comment.ok).to.equal(1);
+                })
+        })
+        it('DELETE sends a 404 and handles error', () => {
+            const comment_id = '5b896113787404464027jkl6'
+            return request.delete(`/api/comments/${comment_id}`)
+                .expect(404)
+                .then(({ body }) => {
+                    expect(typeof body).to.equal('object');
+                    expect(body.msg).to.equal("Error 404: Comment not found.");
                 })
         })
     })
@@ -141,6 +235,15 @@ describe('/api', () => {
                 .then(({ body }) => {
                     expect(body.user.username).to.equal(usernameInput);
                     expect(body.user).to.contain.keys('name', 'username', 'avatar_url');
+                })
+        })
+        it('GET /users/:username error handles for 404 not found', () => {
+            const noUser = 'EllieConnors'
+            return request.get(`/api/users/${noUser}`)
+                .expect(404)
+                .then(({ body }) => {
+                    expect(typeof body).to.equal('object');
+                    expect(body.msg).to.equal("Error 404: Not found.");
                 })
         })
     })

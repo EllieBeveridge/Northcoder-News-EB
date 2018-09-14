@@ -4,7 +4,7 @@ const User = require('../models/User');
 const getAllUsers = (req, res, next) => {
 	User.find()
 		.then((users) => {
-			if (!users) Promise.reject(next);
+			if (!users) throw { name: "CastError" }
 			res.status(200).send({ users });
 		})
 		.catch(err => {
@@ -16,7 +16,7 @@ const getAllUsers = (req, res, next) => {
 const getUsername = (req, res, next) => {
 	User.findOne({ username: req.params.username })
 		.then(user => {
-			if (!user) Promise.reject(next);
+			if (!user) throw { name: "CastError" }
 			res.status(200).send({ user });
 		})
 		.catch(err => {

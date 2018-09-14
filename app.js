@@ -18,9 +18,9 @@ app.set('view engine', 'ejs');
 app.use('/api', apiRouter);
 
 app.use((err, req, res, next) => {
-  if (err.status === 400) res.status(400).send('Error 400: Bad request');
-  if (err.status === 404) res.status(404).send('Error 404: Page not found');
-  else res.status(500).send('Error 500: Internal server error');
+  if (err.status === 400) res.status(400).send({ msg: err.msg || 'Error 400: Bad Request' });
+  else if (err.status === 404) res.status(404).send({ msg: err.msg || 'Error 404: Not found' });
+  else res.status(500).send({ msg: err.msg || 'Error 500: Internal server error' })
 })
 
 
