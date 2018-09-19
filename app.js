@@ -4,6 +4,7 @@ const apiRouter = require('./routers/apiRouter');
 const bodyParser = require('body-parser');
 const { DB_URL = require('./config').DB_URL } = process.env;
 const mongoose = require('mongoose');
+const cors = require('cors');
 mongoose.set('useFindAndModify', false);
 
 mongoose.connect(DB_URL, { useNewUrlParser: true })
@@ -13,11 +14,7 @@ mongoose.connect(DB_URL, { useNewUrlParser: true })
 
 app.use(bodyParser.json());
 
-app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-  next();
-});
+app.use(cors())
 
 app.set('view engine', 'ejs');
 
