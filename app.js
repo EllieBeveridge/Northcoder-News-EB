@@ -13,6 +13,12 @@ mongoose.connect(DB_URL, { useNewUrlParser: true })
 
 app.use(bodyParser.json());
 
+app.use(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+};
+
 app.set('view engine', 'ejs');
 
 app.use('/api', apiRouter);
