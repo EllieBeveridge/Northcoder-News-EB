@@ -48,7 +48,8 @@ const addArticle = (req, res, next) => {
 	if (!Object.keys(userInputObj).includes('title', 'created_by', 'body')) return next({ status: 400, msg: "Error 400: Bad key request." });
 	User.findOne({ username: req.body.created_by }).lean()
 		.then((userDoc) => {
-			if (!userDoc) return next({ status: 404, msg: "Error 404: Not found." })
+			if (!userDoc) return next({ status: 404, msg: "Error 404: User not found." })
+			console.log(userDoc)
 			const userInput = req.body
 			userInput.created_at = Date.now();
 			userInput.created_by = userDoc._id;

@@ -169,6 +169,35 @@ describe('/api', () => {
                     expect(body.msg).to.equal("Error 400: Bad ID Request.");
                 })
         })
+        it('POST returns a 201 and adds a comment for an article_id', () => {
+            const article_id = articles[0]._id
+            const user_id = users[0]._id
+            return request.post(`/api/articles/${article_id}/comments`)
+                .send(
+                    {
+                        "body": "This is a lovely test",
+                        "created_by": user_id
+                    }
+                )
+                .expect(201)
+                .then(({ body }) => {
+                    expect(body.comment.belongs_to).to.equal(`${article_id}`);
+                    expect(body.comment).to.contain.keys('votes', '_id', 'body', 'created_at', 'belongs_to', 'created_by', '__v');
+                })
+        })
+        it('POST /topics/:topic_id/articles error handles for 400 bad key request', () => {
+            const article_id = articles[0]._id
+            return request.post(`/api/articles/${article_id}/comments`)
+                .send({
+                    "bady": "This is a lovely test",
+                    "scroted_by": "butter_bridge"
+                })
+                .expect(400)
+                .then(({ body }) => {
+                    expect(typeof body).to.equal('object');
+                    expect(body.msg).to.equal("Error 400: Bad key request.");
+                })
+        })
     })
     describe('/comments', () => {
         it('PATCH sends a 201 and updates the vote count if voting down', () => {
@@ -226,6 +255,7 @@ describe('/api', () => {
                     expect(body.msg).to.equal("Error 404: Comment not found.");
                 })
         })
+
     })
     describe('/users', () => {
         it('GET returns user object when username input', () => {

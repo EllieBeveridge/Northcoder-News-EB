@@ -1,5 +1,6 @@
 const Article = require('../models/Article');
-const Comment = require('../models/Comment')
+const Comment = require('../models/Comment');
+const User = require('../models/User');
 
 const getAllArticles = (req, res, next) => {
 
@@ -63,6 +64,30 @@ const getCommentsByArticle = (req, res, next) => {
 		})
 }
 
+const addComment = (req, res, next) => {
+	const userInputObj = req.body;
+	if (!Object.keys(userInputObj).includes('body', 'created_by')) return next({ status: 400, msg: "Error 400: Bad key request." });
+	if (userInputObj.created_by.length !== 24) return next({ status: 400, msg: "Error 400: Bad user ID." })
+	User.findOne({ _id: req.body.created_by }).lean()
+		.then((userDoc) => {
+			if (!userDoc) return next({ status: 404, msg: "Error 404: User not found." })
+			const userInput = req.body
+			userInput.created_at = Date.now();
+			userInput.created_by = userDoc._id;
+			userInput.belongs_to = req.params.article_id
+			const newComment = new Comment(userInput)
+			newComment.save()
+				.then((comment) => {
+					if (!comment) next({ status: 404, msg: "Error 404: Comment not saved." })
+					res.status(201).send({ comment })
+				})
+				.catch(err => {
+					if (err.name === 'CastError') next({ status: 404, msg: "Error 404: Comment not posted." });
+					else next(err)
+				})
+		})
+}
+
 
 const patchVoteCount = (req, res, next) => {
 	const { article_id } = req.params;
@@ -92,4 +117,4 @@ const patchVoteCount = (req, res, next) => {
 
 
 
-module.exports = { getAllArticles, getArticleByID, getCommentsByArticle, patchVoteCount }
+module.exports = { getAllArticles, getArticleByID, getCommentsByArticle, addComment, patchVoteCount }
