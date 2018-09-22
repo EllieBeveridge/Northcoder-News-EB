@@ -54,7 +54,7 @@ const getArticleByID = (req, res, next) => {
 const getCommentsByArticle = (req, res, next) => {
 	const { article_id } = req.params
 	if (article_id.length !== 24) return next({ status: 400, msg: "Error 400: Bad ID Request." })
-	Comment.find({ belongs_to: article_id })
+	Comment.find({ belongs_to: article_id }).populate('created_by').lean()
 		.then((comments) => {
 			res.status(200).send({ comments })
 		})
