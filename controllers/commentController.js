@@ -1,7 +1,7 @@
 const Comment = require('../models/Comment')
 
 const getComments = (req, res, next) => {
-	Comment.find()
+	Comment.find().populate('created_by').lean()
 		.then(comments => {
 			if (!comments) throw { name: "CastError" }
 			res.status(200).send({ comments })
